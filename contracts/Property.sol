@@ -32,7 +32,6 @@ contract Property {
     Token[] private tokens;
     Offer[] private offers;
     mapping(address => uint) public addressToTokenCount;
-    mapping(uint => address) public tokenToOwner;
 
     constructor(string memory _propertyId, address _propertyOwner, uint _totalSupply, uint _initialSupply, uint32 _pricePerShare ) {
         propertyId = _propertyId;
@@ -54,7 +53,6 @@ contract Property {
                 listed: false,
                 listPrice: 0
             }));
-            tokenToOwner[i] = _assignee;
         }
     }
 
@@ -62,11 +60,13 @@ contract Property {
         _;
     }
 
-    modifier onlyTokenOwner() {
+    modifier onlyTokenOwner(uint _tokenId) {
+        require(msg.sender == tokens[_tokenId].currentOwner);
         _;
     }
 
-    modifier OnlyOfferBuyer() {
+    modifier onlyOfferBuyer(uint _offerId) {
+        require(msg.sender == offers[_offerId].buyer);
         _;
     }
 
@@ -94,15 +94,15 @@ contract Property {
         return tokens[_tokenId];
     }
 
-    function listToken(uint _tokenId, uint32 _listPrice) public {
+    function listToken(uint _tokenId, uint32 _listPrice) public onlyTokenOwner(_tokenId) {
         // TODO list the token
     }
 
-    function updateToken(uint _tokenId, uint32 _listPrice) public {
+    function updateToken(uint _tokenId, uint32 _listPrice) public onlyTokenOwner(_tokenId) {
         // TODO list the token
     }
 
-    function unlistToken(uint _tokenId, uint32 _listPrice) public {
+    function unlistToken(uint _tokenId, uint32 _listPrice) public onlyTokenOwner(_tokenId) {
         // TODO list the token
     }
 
@@ -110,11 +110,11 @@ contract Property {
         // TODO create the offer and move funds to smart contract
     }
 
-    function updateOffer(uint _offerId, uint32 _offerAmount) public {
+    function updateOffer(uint _offerId, uint32 _offerAmount) public onlyOfferBuyer(_offerId) {
         // TODO update the offer and move funds accordingly
     }
 
-    function retractOffer(uint _offerId) public {
+    function retractOffer(uint _offerId) public onlyOfferBuyer(_offerId) {
         // TODO mark the offer as invalid and return funds
     }
 
