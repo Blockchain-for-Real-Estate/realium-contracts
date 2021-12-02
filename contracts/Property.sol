@@ -53,6 +53,7 @@ contract Property {
                 listed: false,
                 listPrice: 0
             }));
+            addressToTokenCount[_assignee]++;
         }
     }
 

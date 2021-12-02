@@ -28,6 +28,10 @@ describe("Property Contract", function () {
 
   })
 
+  it("shows how much the owner has and how much the contract has", async () => {
+
+  })
+
   describe("getListings", async () => {
     before(async () => {
       await resetState();
