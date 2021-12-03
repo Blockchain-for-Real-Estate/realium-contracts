@@ -10,14 +10,17 @@ let accounts;
 let propertyContract;
 
 const resetState = async () => {
-  propertyContract = await PropertyContract.deploy();
-  await propertyContract.deployed();
+  
 }
 
 describe("Property Contract", function () {
   before(async () => {
-    PropertyContract = await ethers.getContractFactory("Property");
     accounts = await ethers.getSigners();
+    PropertyContract = await ethers.getContractFactory("Property");
+    propertyContract = await PropertyContract.deploy(
+      "id-1", accounts[1].address, 2000, 1000, 100, { gasLimit:  }
+    );
+    await propertyContract.deployed();
   })
 
   it("Deploys the correct supply, circulating supply", async () => {
