@@ -1,24 +1,26 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const deployPropertyContract = require("../utilities/deployers/deployPropertyContract");
+const useAccounts = require("../utilities/hooks/useAccounts");
 
 // GLOBALS
 let accounts;
 let contracts;
 
-const resetState = async () => {};
+const resetState = async () => {
+  contracts = await deployPropertyContract();
+};
 
 describe("Property Contract", function () {
   before(async () => {
-    accounts = await ethers.getSigners();
-    PropertyContract = await ethers.getContractFactory("Property");
-    propertyContract = await PropertyContract.deploy(
-      "id-1",
-      accounts[1].address,
-      2000,
-      1000,
-      100
+    accounts = await useAccounts();
+    await resetState();
+  });
+
+  it("deploys usdt contract with 1000 usdt in deployer", async () => {
+    expect(contracts.usdt.address).to.exist;
+    expect(await contracts.usdt.balanceOf(accounts.deployer.address)).to.equal(
+      1000
     );
-    await propertyContract.deployed();
   });
 
   it("Deploys the correct supply, circulating supply", async () => {});
