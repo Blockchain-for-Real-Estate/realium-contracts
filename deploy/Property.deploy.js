@@ -1,5 +1,3 @@
-import fs from "fs";
-
 async function main() {
   const Property = await ethers.getContractFactory("Property");
   const property = await Property.deploy();
