@@ -37,12 +37,12 @@ contract Property is PropertyTypes, AccessControl {
     // TODO Make this contract upgradeable
     constructor(address _usdtAddress, string memory _propertyId, address _propertyOwner, uint _totalSupply, uint _initialSupply, uint16 _initialPricePerShare ) {
         usdt = IERC20(_usdtAddress);
+
         propertyId = _propertyId;
         initialPricePerShare = _initialPricePerShare;
         totalSupply = _totalSupply;
         ownerSupply = _initialSupply;
         circulatingSupply = 0;
-        
         
         _setupRole(MODERATOR, msg.sender);
         _setupRole(PROPERTY_OWNER, _propertyOwner);
@@ -157,7 +157,7 @@ contract Property is PropertyTypes, AccessControl {
         activeListingCount--;
         addressToListingCount[msg.sender]--;
 
-        emit TokenUnlisted(_tokenId);
+        // emit TokenUnlisted(_tokenId);
     }
 
     function makeOffer(uint16 _offerAmount) public {
@@ -181,8 +181,7 @@ contract Property is PropertyTypes, AccessControl {
     function retractOffer(uint _offerId) public onlyOfferBuyer(_offerId) {
         _deleteOffer(_offerId);
         usdt.transfer(msg.sender, offers[_offerId].price);
-
-        event RetractOffer(uint offerId);
+        emit RetractOffer(_offerId);
     }
 
     function buyListing(uint _listingId) public {
